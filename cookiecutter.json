@@ -1,0 +1,5 @@
+{
+  "topic_slug": "flask",
+  "package_name": "{{ cookiecutter.topic_slug }}",
+  "package_version": "1.0.0"
+}
