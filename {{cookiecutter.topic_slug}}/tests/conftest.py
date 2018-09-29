@@ -196,6 +196,10 @@ class PexpectSpawnContext(object):
     def match(self):
         return self._child.match
 
+@pytest.fixture(scope="session")
+def py2():
+    return sys.version_info[0] == 2
+
 @pytest.fixture
 def testdata(request):
     base_dir = path.dirname(request.module.__file__)
