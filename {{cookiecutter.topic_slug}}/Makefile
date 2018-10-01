@@ -26,8 +26,9 @@ setup:
 	docker build -t $(docker_image) .
 	$(call docker_run,tox --notest)
 
+shell: docker_opts += --volume ~/.vimrc:/root/.vimrc
 shell:
-	$(call docker_run)
+	$(call docker_run,)
 
 test: docker_opts += --env TEST=$(TEST)
 test: docker_opts += --env TOXENV=$(TEST_ENVS)
