@@ -8,7 +8,7 @@ TEST_MARK ?=
 # Internal Variables
 docker_image = learning-{{cookiecutter.topic_slug}}.local
 docker_opts =
-pytest_opts =
+pytest_opts = -vvv -o log_cli=true
 
 ifneq ($(TEST_MARK),)
   pytest_opts += -m '$(TEST_MARK)'
