@@ -1,8 +1,18 @@
+MAKEFLAGS=--warn-undefined-variables
+
+# Parameters
 TEST ?= tests/
 TEST_ENVS ?=
+TEST_MARK ?=
 
+# Internal Variables
 docker_image = learning-{{cookiecutter.topic_slug}}.local
 docker_opts =
+pytest_opts =
+
+ifneq ($(TEST_MARK),)
+  pytest_opts += -m '$(TEST_MARK)'
+endif
 
 define docker_run
 	docker run --rm -it \
@@ -21,6 +31,7 @@ shell:
 
 test: docker_opts += --env TEST=$(TEST)
 test: docker_opts += --env TOXENV=$(TEST_ENVS)
+test: docker_opts += --env PYTEST_OPTS="$(pytest_opts)"
 test:
 	$(call docker_run,tox)
 
