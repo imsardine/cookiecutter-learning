@@ -107,9 +107,20 @@ class Workspace(object):
 class ShellRunResult(object):
 
     def __init__(self, out, err, rc):
-        self.out = out
-        self.err = err
+        self._out = out
+        self._err = err
         self.rc = rc
+
+    @property
+    def out(self):
+        return self._trim_trailing_newline(self._out)
+
+    @property
+    def err(self):
+        return self._trim_trailing_newline(self._err)
+
+    def _trim_trailing_newline(self, txt):
+        return txt[0:-1] if txt[-1] == '\n' else txt
 
 class PexpectSpawnContext(object):
 
