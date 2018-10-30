@@ -1,6 +1,8 @@
 MAKEFLAGS=--warn-undefined-variables
 
 # Parameters
+-include Makefile.credentials
+-include Makefile.settings
 TEST ?= tests/
 TEST_ENVS ?=
 TEST_MARK ?=
