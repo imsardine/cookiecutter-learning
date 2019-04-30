@@ -19,7 +19,6 @@ endif
 define docker_run
 	docker run --rm -it \
 	  --volume $(PWD):/workspace \
-	  --volume $(PWD)/tmp:/tmp \
 	  $(docker_opts) \
 	  $(docker_image) $(1)
 endef
@@ -36,7 +35,7 @@ test: docker_opts += --env TEST=$(TEST)
 test: docker_opts += --env TOXENV=$(TEST_ENVS)
 test: docker_opts += --env PYTEST_OPTS="$(pytest_opts)"
 test:
-	$(call docker_run,tox)
+	$(call docker_run,tox --parallel all)
 
 clean:
 	git clean -Xdf
