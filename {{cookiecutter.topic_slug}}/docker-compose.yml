@@ -4,5 +4,5 @@ services:
     build: .
     volumes:
       - .:/workspace
-  redis:
-    image: redis:5.0.4
+  httpbin:
+    image: kennethreitz/httpbin
