@@ -72,22 +72,18 @@ class Workspace(object):
         _cwd = os.getcwd()
         assert path.isabs(_cwd), _cwd
 
-        os.chdir(self.workdir)
-        try:
-            p = Popen(cmdline, stdout=PIPE, stderr=PIPE, shell=True)
+        p = Popen(cmdline, stdout=PIPE, stderr=PIPE, shell=True)
 
-            out, err = p.communicate()
-            if p.returncode != 0 and not err_expected:
-                print(out, file=sys.stdout)
-                print(err, file=sys.stderr)
-                raise CalledProcessError(p.returncode, cmdline)
-            elif p.returncode == 0 and err_expected:
-                assert False, 'Error expected!'
+        out, err = p.communicate()
+        if p.returncode != 0 and not err_expected:
+            print(out, file=sys.stdout)
+            print(err, file=sys.stderr)
+            raise CalledProcessError(p.returncode, cmdline)
+        elif p.returncode == 0 and err_expected:
+            assert False, 'Error expected!'
 
-            return ShellRunResult(
-                out.decode('utf-8'), err.decode('utf-8'), p.returncode)
-        finally:
-            os.chdir(_cwd)
+        return ShellRunResult(
+            out.decode('utf-8'), err.decode('utf-8'), p.returncode)
 
     def run_err(self, cmdline):
         return self.run(cmdline, err_expected=True)
@@ -144,7 +140,6 @@ class PexpectSpawnContext(object):
     def __enter__(self):
         import pexpect
 
-        os.chdir(self._workdir)
         self._child = pexpect.spawn( # unicode mode
             'bash', ['-c', self._cmdline], encoding='utf-8')
 
@@ -230,5 +225,9 @@ def testdata(request):
 
 @pytest.fixture
 def workspace(tmpdir):
-    return Workspace(tmpdir.strpath)
+    cwd, workdir = os.getcwd(), tmpdir.strpath
+    os.chdir(workdir)
 
+    yield Workspace(workdir)
+
+    os.chdir(cwd)
