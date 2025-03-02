@@ -55,9 +55,17 @@ lines = _dedent
 class Workspace(object):
 
     def __init__(self, workdir):
+        self._init(workdir)
+
+    def _init(self, workdir):
         print('WORKDIR = %s' % workdir, file=sys.stderr)
         self.workdir = workdir
         self._file_helper = DataFileHelper(workdir)
+
+    def chdir(self, workdir):
+        workdir = self._abspath(workdir);
+        os.chdir(workdir)
+        self._init(workdir);
 
     def read(self, fn, encoding=None):
         return self._file_helper.read(fn, encoding)
